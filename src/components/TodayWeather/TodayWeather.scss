@@ -1,0 +1,120 @@
+
+.today-weather {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 50px;
+  padding-inline: 30px;
+  padding-top: 40px;
+  max-height: 100vh;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  color: white;
+
+  @include tablet {
+    overflow-y: visible;
+  }
+
+
+  &__params {
+    position: relative;
+
+    padding-bottom: 28px;
+    border-bottom: 1px solid white;
+
+    @include  tablet {
+      padding-bottom: 85px;
+    }
+
+    &-header {
+      @include tablet {
+        align-self: center;
+      }
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+
+    &-state {
+      text-transform: uppercase;
+      font-weight: 500;
+
+      @include tablet {
+        align-self: center;
+
+      }
+    }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      row-gap: 30px;
+
+    }
+
+    &-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+
+      @include tablet {
+        column-gap: fluid(195, 100);
+      }
+    }
+
+    &-metrix {
+      display: flex;
+      align-items: center;
+      column-gap: 20px;
+
+
+    }
+
+  }
+
+  &__forecast {
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+    padding-bottom: 150px;
+
+    @include tablet {
+      padding-bottom: 0;
+    }
+
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      row-gap: 34px;
+    }
+
+    &-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      column-gap: 20px;
+    }
+
+    &-body {
+      display: flex;
+      column-gap: 35px;
+    }
+
+    &-title {
+      @include tablet {
+        align-self: center;
+      }
+    }
+
+    &-img {
+      --size: #{fluid(48, 35)};
+
+      @include square(var(--size));
+    }
+  }
+}

@@ -1,0 +1,7 @@
+
+.week-weather {
+  @include tablet {
+    max-width: 450px;
+    align-self: center;
+  }
+}

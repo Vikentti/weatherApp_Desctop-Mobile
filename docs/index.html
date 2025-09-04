@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="assets/main.js" type="module"></script>
+    <link rel="stylesheet" href="assets/bundle.css">
+  </head>
+  <body>
+    <main class="body">
+      <div class="body__bg"></div>
+      <header class="container header">
+        <form class="search">
+          <div class="search__wrapper">
+            <select name="Citys" id="citySelect" class="search__container">
+              <option class="search__item" disabled="" selected="">Search Location...</option>
+              <option class="search__item" value="Moscow">Москва</option>
+              <option class="search__item" value="London">Лондон</option>
+              <option class="search__item" value="New-york">Нью-йорк</option>
+              <option class="search__item" value="Paris">Париж</option>
+              <option class="search__item" value="Tokyo">Токио</option>
+              <option class="search__item" value="Saint-Petersburg">Санкт-Петербург</option>
+            </select>
+          </div>
+        </form>
+      </header>
+      <div class="body__inner container">
+        <div class="body__fixed fixed-data">
+          <div class="fixed-data__temp">16</div>
+          <div class="fixed-data__info">
+            <div class="fixed-data__info-city">Moscow</div>
+            <div class="fixed-data__info-time">06:09 - Monday, 9 Sep ‘23</div>
+          </div>
+          <img class="fixed-data__img" src="/cloud.svg" alt width="70" height="70" loading="lazy">
+        </div>
+        <div class="body__forecast week-weather">
+          <div class="today-weather">
+            <p class="today-weather__params-header">Weather Details...</p>
+            <div class="today-weather__params">
+              <div class="today-weather__details">
+                <p class="today-weather__details-state">thunderstorm with light drizzle</p>
+                <ul class="today-weather__details-list">
+                  <li class="today-weather__details-item">
+                    <p class="today-weather__details-title">Temp max</p>
+                    <div class="today-weather__details-metrix">
+                      <p class="today-weather__details-weather" id="max-temp"></p>
+                      <img class="today-weather__details-img" src="hot.svg" alt width="36" height="36" loading="lazy">
+                    </div>
+                  </li>
+                  <li class="today-weather__details-item">
+                    <p class="today-weather__details-title">Temp min</p>
+                    <div class="today-weather__details-metrix">
+                      <p class="today-weather__details-weather" id="min-temp"></p>
+                      <img class="today-weather__details-img" src="cold.svg" alt width="36" height="36" loading="lazy">
+                    </div>
+                  </li>
+                  <li class="today-weather__details-item">
+                    <p class="today-weather__details-title">Humadity</p>
+                    <div class="today-weather__details-metrix">
+                      <p class="today-weather__details-weather" id="humadity"></p>
+                      <img class="today-weather__details-img" src="humadity.svg" alt width="36" height="36" loading="lazy">
+                    </div>
+                  </li>
+                  <li class="today-weather__details-item">
+                    <p class="today-weather__details-title">Cloudy</p>
+                    <div class="today-weather__details-metrix">
+                      <p class="today-weather__details-weather" id="cloudy"></p>
+                      <img class="today-weather__details-img" src="cloud.svg" alt width="36" height="36" loading="lazy">
+                    </div>
+                  </li>
+                  <li class="today-weather__details-item">
+                    <p class="today-weather__details-title">Wind</p>
+                    <div class="today-weather__details-metrix">
+                      <p class="today-weather__details-weather" id="wind"></p>
+                      <img class="today-weather__details-img" src="wind.svg" alt width="36" height="36" loading="lazy">
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="today-weather__forecast">
+              <p class="today-weather__forecast-title">Today’s Weather Forecast...</p>
+              <ul class="today-weather__forecast-list">
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+                <li class="today-weather__forecast-item">
+                  <div class="today-weather__forecast-body">
+                    <img class="today-weather__forecast-img" src="" alt="" width="48" height="48" loading="lazy">
+                    <div class="today-weather__forecast-params">
+                      <p class="today-weather__forecast-time"></p>
+                      <p class="today-weather__forecast-what"></p>
+                    </div>
+                  </div>
+                  <div class="today-weather__forecast-weather">
+                    <p class="today-weather__forecast-temp"></p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

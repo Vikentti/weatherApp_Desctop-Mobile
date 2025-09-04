@@ -5,7 +5,7 @@ export default defineConfig({
   root: "",
   base: process.env.NODE_ENV === "production" ? "/weatherApp_Desctop-Mobile/" : "./",
   public: "public",
-  out: "dist",
+  out: "docs",
   assets: {
     outDir: "assets",
     outName: "[name]",

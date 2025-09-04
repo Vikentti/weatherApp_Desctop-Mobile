@@ -12,7 +12,8 @@
   color: white;
 
   @include tablet {
-    overflow-y: visible;
+    overflow-y: visible ;
+    max-height: none ;
   }
 
 

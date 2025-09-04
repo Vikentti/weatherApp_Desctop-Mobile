@@ -16,7 +16,7 @@ export default function (props) {
     <>
       <Head htmlAttributes={{lang: 'en'}}>
         <title>Weather</title>
-        <script src='/src/main.js' ></script>
+        <script src='/src/main.js' type='module'></script>
         <link
           rel="apple-touch-icon"
           sizes="180x180"

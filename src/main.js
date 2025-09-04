@@ -1,3 +1,24 @@
+import fogIcon from '@/assets/icons/Fog.svg'
+import brokenCloudyIcon from '@/assets/icons/Broken-Cloudy.svg'
+import rainSunIcon from '@/assets/icons/Rain&Sun.svg'
+import showerRainIcon from '@/assets/icons/Shower-Rain&Sun.svg'
+import snowIcon from '@/assets/icons/Snow.svg'
+import thunderIcon from '@/assets/icons/Thunderstorm.svg'
+import sunnyIcon from '@/assets/icons/Sunny.svg'
+
+import clearBg from '@/assets/images/clear.png'
+import cloudNightBg from '@/assets/images/cloudNight.png'
+import cloudBg from '@/assets/images/cloudy.png'
+import mistBg from '@/assets/images/mist.png'
+import nightBg from '@/assets/images/night.png'
+import rainBg from '@/assets/images/rain.png'
+import snowBg from '@/assets/images/snow.png'
+import thunderBg from '@/assets/images/thunderstrom.png'
+
+
+
+
+
 function fetchWeatherData(city) {
   const forecastPromise = fetch(`https://api.weatherapi.com/v1/forecast.json?key=43e478e4b6fc474ab08164231252508&q=${city}&days=7&aqi=no`)
     .then(response => {
@@ -161,19 +182,19 @@ async function displayWeather(city) {
     function fixedImageChange() {
       const cond = condition.toLowerCase()
       if (cond.includes('cloudy') || cond.includes('overcast')) {
-        fixDataImage.src = "/icons/Broken-Cloudy.svg"
+        fixDataImage.src = brokenCloudyIcon
       } else if (cond.includes("mist") || cond.includes('fog')) {
-        fixDataImage.src = "/icons/Fog.svg"
+        fixDataImage.src = fogIcon
       } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder') && !cond.includes('heavy')) {
-        fixDataImage.src = "/icons/Rain&Sun.svg"
+        fixDataImage.src = rainSunIcon
       } else if (cond.includes('heavy') && !cond.includes('snow')) {
-        fixDataImage.src = "/icons/Shower-Rain&Sun.svg"
+        fixDataImage.src = showerRainIcon
       } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-        fixDataImage.src = "/icons/Snow.svg"
+        fixDataImage.src = snowIcon
       } else if (cond.includes('sunny') || cond.includes('clear')) {
-        fixDataImage.src = "/icons/Sunny.svg"
+        fixDataImage.src = sunnyIcon
       } else if (cond.includes('thunder')) {
-        fixDataImage.src = "/icons/Thunderstorm.svg"
+        fixDataImage.src = thunderIcon
       }
     }
 
@@ -196,19 +217,19 @@ async function displayWeather(city) {
       weatherForecastImagesElements.forEach((element, index) => {
         const cond = weatherForecastCondition[index].toLowerCase()
         if (cond.includes('cloudy') || cond.includes('overcast')) {
-          element.src = "/icons/Broken-Cloudy.svg"
+          element.src = brokenCloudyIcon
         } else if (cond.includes("mist") || cond.includes('fog')) {
-          element.src = "/icons/Fog.svg"
+          element.src = fogIcon
         } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder') && !cond.includes('heavy')) {
-          element.src = "/icons/Rain&Sun.svg"
+          element.src = rainSunIcon
         } else if (cond.includes('heavy') && !cond.includes('snow')) {
-          element.src = "/icons/Shower-Rain&Sun.svg"
+          element.src = showerRainIcon
         } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-          element.src = "/icons/Snow.svg"
+          element.src = snowIcon
         } else if (cond.includes('sunny') || cond.includes('clear')) {
-          element.src = "/icons/Sunny.svg"
+          element.src = sunnyIcon
         } else if (cond.includes('thunder')) {
-          element.src = "/icons/Thunderstorm.svg"
+          element.src = thunderIcon
         }
       })
     }
@@ -217,21 +238,21 @@ async function displayWeather(city) {
       const cond = condition.toLowerCase();
 
       if (night && cond.includes('clear')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/night.png")`
+        bgImage.style.backgroundImage = `url(${nightBg})`
       } else if (night && (cond.includes('cloudy') || cond.includes('overcast'))) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/cloudNight.png")`
+        bgImage.style.backgroundImage = `url(${cloudNightBg})`
       } else if (cond.includes('sunny') || cond.includes('clear')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/clear.png")`
+        bgImage.style.backgroundImage = `url(${clearBg})`
       } else if (cond.includes("mist") || cond.includes('fog')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/mist.png")`
+        bgImage.style.backgroundImage = `url(${mistBg})`
       } else if (cond.includes('cloudy') || cond.includes('overcast')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/cloudy.png")`
+        bgImage.style.backgroundImage = `url(${cloudBg})`
       } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/rain.png")`
+        bgImage.style.backgroundImage = `url(${rainBg})`
       } else if (cond.includes('thunder')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/thunderstrom.png")`
+        bgImage.style.backgroundImage = `url(${thunderBg})`
       } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-        bgImage.style.backgroundImage = `url("/src/assets/images/snow.png")`
+        bgImage.style.backgroundImage = `url(${snowBg})`
       }
     }
 

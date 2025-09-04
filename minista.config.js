@@ -3,14 +3,14 @@ import path from 'path'
 
 export default defineConfig({
   root: "",
-  base: "/",
+  base: process.env.NODE_ENV === "production" ? "/weatherApp_Desctop-Mobile/" : "./",
   public: "public",
   out: "dist",
   assets: {
     outDir: "assets",
     outName: "[name]",
     images: {
-      outDir: "assets/images",
+      outDir: "images",
       outName: "[name]",
       remoteName: "remote",
       optimize: {
@@ -33,14 +33,14 @@ export default defineConfig({
     },
     icons: {
       srcDir: "src/assets/icons",
-      outDir: "assets/images",
-      outName: "[dirname]",
+      outDir: "icons",
+      outName: "[name]",
       svgstoreOptions: {
         cleanSymbols: ["fill", "stroke", "stroke-linejoin", "stroke-width"],
       },
     },
     fonts: {
-      outDir: "assets/fonts",
+      outDir: "fonts",
       outName: "[name]",
     },
     bundle: {

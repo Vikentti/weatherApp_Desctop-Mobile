@@ -1,1 +1,143 @@
-import"./index-bbd4c2f5.js";const E=""+new URL("../images/Fog.svg",import.meta.url).href,H=""+new URL("../images/Broken-Cloudy.svg",import.meta.url).href,b=""+new URL("../images/Rain_Sun.svg",import.meta.url).href,C=""+new URL("../images/Shower-Rain_Sun.svg",import.meta.url).href,S=""+new URL("../images/Snow.svg",import.meta.url).href,M=""+new URL("../images/Thunderstorm.svg",import.meta.url).href,R=""+new URL("../images/Sunny.svg",import.meta.url).href,N=""+new URL("../images/clear.png",import.meta.url).href,U=""+new URL("../images/cloudNight.png",import.meta.url).href,P=""+new URL("../images/cloudy.png",import.meta.url).href,q=""+new URL("../images/mist.png",import.meta.url).href,z=""+new URL("../images/night.png",import.meta.url).href,x=""+new URL("../images/rain.png",import.meta.url).href,D=""+new URL("../images/snow.png",import.meta.url).href,F=""+new URL("../images/thunderstrom.png",import.meta.url).href;function A(a){const n=fetch(`https://api.weatherapi.com/v1/forecast.json?key=43e478e4b6fc474ab08164231252508&q=${a}&days=7&aqi=no`).then(t=>{if(!t.ok)throw new Error(`HTTP ошибка! Код: ${t.status}`);return t.json()}).then(t=>{function m(r){switch(r){case"London":return"Europe/London";case"Moscow":return"Europe/Moscow";case"Tokyo":return"Asia/Tokyo";case"Saint-Petersburg":return"Europe/Moscow";case"Paris":return"Europe/Paris";case"New-york":return"America/New_York"}}function v(r){const i={timeZone:r,hour12:!1,hour:"2-digit",minute:"2-digit"};return new Intl.DateTimeFormat("ru-RU",i).format(new Date)}const h=v(m(`${a}`)),w=Number(h.slice(0,2)),p=Number(h.slice(3,5)),l=t.forecast.forecastday,f=l[0].hour,g=l[1].hour,s=w+3,u=()=>l.map(r=>r.day.maxtemp_c),T=()=>l.map(r=>r.day.mintemp_c),I=()=>{const r=[],i=[...f,...g];for(let e=s;e<48;e+=3)if(r.push(i[e].temp_c),r.length===8)return r;return r},_=()=>{const r=[],i=[...f,...g];for(let e=s;e<48;e+=3)if(r.push(i[e].condition.text),r.length===8)return r;return r};function $(){const r=[];for(let i=s;i<48;i+=3)if(r.push(i),r.length===8)return r.map(e=>e>24?e-24:e)}return{weekMax:u(),weekMin:T(),everyThreeHours:I(),everyThreeHoursCondition:_(),weatherForecastTime:$(),minNow:p,currentCityTime:h,getTimeZone:m(a),hourNow:w}}),d=fetch(`https://api.weatherapi.com/v1/current.json?key=43e478e4b6fc474ab08164231252508&q=${a}&aqi=no`).then(t=>{if(!t.ok)throw new Error(`HTTP ошибка! Код: ${t.status}`);return t.json()}).then(t=>({current:`${t.current.temp_c}°`,humidityPercent:`${t.current.humidity}%`,cloudPercent:`${t.current.cloud}%`,windSpeed:`${t.current.wind_kph} km/h`,condition:t.current.condition.text}));return Promise.all([n,d]).then(([t,m])=>({...t,...m})).catch(t=>{throw console.error("Ошибка при выполнении запроса:",t),t})}async function B(a){try{let I=function(){const e=g.toLowerCase();e.includes("cloudy")||e.includes("overcast")?u.src=H:e.includes("mist")||e.includes("fog")?u.src=E:(e.includes("rain")||e.includes("drizzle"))&&!e.includes("thunder")&&!e.includes("heavy")?u.src=b:e.includes("heavy")&&!e.includes("snow")?u.src=C:e.includes("snow")||e.includes("blizzard")||e.includes("ice")||e.includes("sleet")?u.src=S:e.includes("sunny")||e.includes("clear")?u.src=R:e.includes("thunder")&&(u.src=M)},_=function(){t.forEach((e,c)=>{p[c]&&(e.innerHTML=p[c])}),m.forEach((e,c)=>{l[c]&&(e.innerHTML=l[c])}),v.forEach((e,c)=>{f[c]&&(e.innerHTML=f[c])}),w.forEach((e,c)=>{const o=l[c].toLowerCase();o.includes("cloudy")||o.includes("overcast")?e.src=H:o.includes("mist")||o.includes("fog")?e.src=E:(o.includes("rain")||o.includes("drizzle"))&&!o.includes("thunder")&&!o.includes("heavy")?e.src=b:o.includes("heavy")&&!o.includes("snow")?e.src=C:o.includes("snow")||o.includes("blizzard")||o.includes("ice")||o.includes("sleet")?e.src=S:o.includes("sunny")||o.includes("clear")?e.src=R:o.includes("thunder")&&(e.src=M)})},$=function(){const e=g.toLowerCase();T&&e.includes("clear")?s.style.backgroundImage=`url(${z})`:T&&(e.includes("cloudy")||e.includes("overcast"))?s.style.backgroundImage=`url(${U})`:e.includes("sunny")||e.includes("clear")?s.style.backgroundImage=`url(${N})`:e.includes("mist")||e.includes("fog")?s.style.backgroundImage=`url(${q})`:e.includes("cloudy")||e.includes("overcast")?s.style.backgroundImage=`url(${P})`:(e.includes("rain")||e.includes("drizzle"))&&!e.includes("thunder")?s.style.backgroundImage=`url(${x})`:e.includes("thunder")?s.style.backgroundImage=`url(${F})`:(e.includes("snow")||e.includes("blizzard")||e.includes("ice")||e.includes("sleet"))&&(s.style.backgroundImage=`url(${D})`)},r=function(e){const c={timeZone:e,hour12:!1,hour:"2-digit",minute:"2-digit",year:"numeric",month:"short",day:"numeric",weekday:"long"},k=new Intl.DateTimeFormat("en-EN",c).formatToParts(new Date),L={};return k.forEach(y=>{y.type!=="literal"&&(L[y.type]=y.value)}),L},i=function(){const e=r(n.getTimeZone),c=e.day,o=`${e.hour}:${e.minute}`,k=e.weekday,L=e.month,y=e.year.slice(2,4);return h.innerHTML=`${o} - ${k}, ${c} ${L} '${y}`};const n=await A(a);document.getElementById("max-temp").innerHTML=n.weekMax[0],document.getElementById("min-temp").innerHTML=n.weekMin[0],document.getElementById("humadity").innerHTML=n.humidityPercent,document.getElementById("cloudy").innerHTML=n.cloudPercent,document.getElementById("wind").innerHTML=n.windSpeed,document.querySelector(".today-weather__details-state").innerHTML=n.condition,document.querySelector(".fixed-data__temp").innerHTML=n.current;const d=n.hourNow,t=document.querySelectorAll(".today-weather__forecast-temp"),m=document.querySelectorAll(".today-weather__forecast-what"),v=document.querySelectorAll(".today-weather__forecast-time"),h=document.querySelector(".fixed-data__info-time"),w=document.querySelectorAll(".today-weather__forecast-img"),p=n.everyThreeHours,l=n.everyThreeHoursCondition,f=n.weatherForecastTime.map(e=>e>=1&&e<=9?`0${e}:${n.minNow}`:`${e}:${n.minNow}`),g=n.condition,s=document.querySelector(".body__bg"),u=document.querySelector(".fixed-data__img"),T=d>=21||d<=4;I(),_(),i(),$()}catch(n){console.error("Ошибка:",n)}}document.addEventListener("DOMContentLoaded",function(){const a=document.getElementById("citySelect");let n="Moscow";B(n),d(n),a.addEventListener("change",function(t){n=t.target.value,d(n),B(n)});function d(t){document.querySelector(".fixed-data__info-city").textContent=t}});
+import "./index-bbd4c2f5.js";
+
+const h = "" + new URL("../images/Fog.svg", import.meta.url).href,
+  I = "" + new URL("../images/Broken-Cloudy.svg", import.meta.url).href,
+  f = "" + new URL("../images/Rain_Sun.svg", import.meta.url).href,
+  S = "" + new URL("../images/Shower-Rain_Sun.svg", import.meta.url).href,
+  x = "" + new URL("../images/Snow.svg", import.meta.url).href,
+  C = "" + new URL("../images/Thunderstorm.svg", import.meta.url).href,
+  g = "" + new URL("../images/Sunny.svg", import.meta.url).href,
+  p = "" + new URL("../images/clear.png", import.meta.url).href,
+  L = "" + new URL("../images/cloudNight.png", import.meta.url).href,
+  R = "" + new URL("../images/cloudy.png", import.meta.url).href,
+  B = "" + new URL("../images/mist.png", import.meta.url).href,
+  E = "" + new URL("../images/night.png", import.meta.url).href,
+  v = "" + new URL("../images/rain.png", import.meta.url).href,
+  U = "" + new URL("../images/snow.png", import.meta.url).href,
+  q = "" + new URL("../images/thunderstrom.png", import.meta.url).href,
+  z = "43e478e4b6fc474ab08164231252508", b = "https://api.weatherapi.com/v1",
+  o = {
+    maxTemp: document.getElementById("max-temp"),
+    minTemp: document.getElementById("min-temp"),
+    humidity: document.getElementById("humadity"),
+    cloudy: document.getElementById("cloudy"),
+    wind: document.getElementById("wind"),
+    condition: document.querySelector(".today-weather__details-state"),
+    currentTemp: document.querySelector(".fixed-data__temp"),
+    cityName: document.querySelector(".fixed-data__info-city"),
+    currentTime: document.querySelector(".fixed-data__info-time"),
+    bgImage: document.querySelector(".body__bg"),
+    fixDataImage: document.querySelector(".fixed-data__img"),
+    forecastTemp: document.querySelectorAll(".today-weather__forecast-temp"),
+    forecastCondition: document.querySelectorAll(".today-weather__forecast-what"),
+    forecastTime: document.querySelectorAll(".today-weather__forecast-time"),
+    forecastImages: document.querySelectorAll(".today-weather__forecast-img")
+  }, a = {
+    cloudy: I,
+    mist: h,
+    fog: h,
+    rain: f,
+    drizzle: f,
+    heavy: S,
+    snow: x,
+    sunny: g,
+    clear: g,
+    thunder: C
+  }, c = {
+    clear: p,
+    cloudNight: L,
+    cloudy: R,
+    mist: B,
+    night: E,
+    rain: v,
+    snow: U,
+    thunder: q
+  }, k = n => n >= 21 || n <= 4,
+  D = (n, e) => `${n.toString().padStart(2, "0")}:${e.toString().padStart(2, "0")}`,
+  w = n => {
+    const e = n.toLowerCase();
+    return e.includes("cloudy") || e.includes("overcast") ? a.cloudy : e.includes("mist") || e.includes("fog") ? a.mist : (e.includes("rain") || e.includes("drizzle")) && !e.includes("thunder") ? a.rain : e.includes("heavy") && !e.includes("snow") ? a.heavy : e.includes("snow") || e.includes("blizzard") || e.includes("ice") ? a.snow : e.includes("thunder") ? a.thunder : e.includes("sunny") || e.includes("clear") ? a.clear : g
+  }, H = (n, e) => {
+    const t = n.toLowerCase();
+    return e && t.includes("clear") ? c.night : e && (t.includes("cloudy") || t.includes("overcast")) ? c.cloudNight : t.includes("sunny") || t.includes("clear") ? c.clear : t.includes("mist") || t.includes("fog") ? c.mist : t.includes("cloudy") || t.includes("overcast") ? c.cloudy : (t.includes("rain") || t.includes("drizzle")) && !t.includes("thunder") ? c.rain : t.includes("thunder") ? c.thunder : t.includes("snow") || t.includes("blizzard") || t.includes("ice") ? c.snow : p
+  };
+
+async function $(n) {
+  try {
+    const e = await fetch(`${b}/forecast.json?key=${z}&q=${n}&days=2&aqi=no`);
+    if (!e.ok) throw new Error(`HTTP error! Status: ${e.status}`);
+    const t = await e.json(), r = t.current, m = t.forecast.forecastday[0],
+      i = t.location, u = N(t.forecast.forecastday, i.localtime);
+    return {
+      current: {
+        temp: `${r.temp_c}°`,
+        humidity: `${r.humidity}%`,
+        cloud: `${r.cloud}%`,
+        wind: `${r.wind_kph} km/h`,
+        condition: r.condition.text
+      },
+      today: {maxTemp: m.day.maxtemp_c, minTemp: m.day.mintemp_c},
+      location: {name: i.name, timezone: i.tz_id, localtime: i.localtime},
+      hourlyForecast: u
+    }
+  } catch (e) {
+    throw console.error("Error fetching weather data:", e), e
+  }
+}
+
+function N(n, e) {
+  const t = new Date(e), r = t.getHours(), m = t.getMinutes(), i = [],
+    u = [...n[0].hour, ...n[1] ? n[1].hour : []],
+    _ = u.findIndex(s => new Date(s.time).getHours() === r);
+  for (let s = 0; s < 8; s++) {
+    const d = _ + 3 * (s + 1);
+    if (d >= u.length) break;
+    const l = u[d], T = new Date(l.time);
+    i.push({
+      time: D(T.getHours(), m),
+      temp: l.temp_c,
+      condition: l.condition.text
+    })
+  }
+  return i
+}
+
+async function y(n) {
+  try {
+    const e = await $(n);
+    o.maxTemp.textContent = e.today.maxTemp, o.minTemp.textContent = e.today.minTemp, o.humidity.textContent = e.current.humidity, o.cloudy.textContent = e.current.cloud, o.wind.textContent = e.current.wind, o.condition.textContent = e.current.condition, o.currentTemp.textContent = e.current.temp, o.cityName.textContent = e.location.name, A(e.location.localtime);
+    const t = k(new Date(e.location.localtime).getHours());
+    o.fixDataImage.src = w(e.current.condition), o.bgImage.style.backgroundImage = `url(${H(e.current.condition, t)})`, F(e.hourlyForecast)
+  } catch (e) {
+    console.error("Error displaying weather:", e)
+  }
+}
+
+function A(n) {
+  const e = new Date(n), t = {
+    weekday: "long",
+    year: "2-digit",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  };
+  o.currentTime.textContent = e.toLocaleDateString("en-EN", t)
+}
+
+function F(n) {
+  n.forEach((e, t) => {
+    o.forecastTemp[t] && (o.forecastTemp[t].textContent = e.temp), o.forecastCondition[t] && (o.forecastCondition[t].textContent = e.condition), o.forecastTime[t] && (o.forecastTime[t].textContent = e.time), o.forecastImages[t] && (o.forecastImages[t].src = w(e.condition))
+  })
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  let n = "Moscow";
+  const e = document.getElementById("citySelect");
+  let t;
+  e.addEventListener("change", function (r) {
+    clearTimeout(t), t = setTimeout(() => {
+      n = r.target.value, y(n)
+    }, 300)
+  }), y(n)
+});

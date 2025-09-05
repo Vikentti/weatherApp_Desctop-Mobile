@@ -17,314 +17,250 @@ import thunderBg from '@/assets/images/thunderstrom.png'
 
 
 
+const WEATHER_API_KEY = '43e478e4b6fc474ab08164231252508';
+const BASE_URL = 'https://api.weatherapi.com/v1';
 
 
-function fetchWeatherData(city) {
-  const forecastPromise = fetch(`https://api.weatherapi.com/v1/forecast.json?key=43e478e4b6fc474ab08164231252508&q=${city}&days=7&aqi=no`)
-    .then(response => {
-      if (!response.ok) throw new Error(`HTTP ошибка! Код: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      function getTimeZone(city) {
-        switch (city) {
-          case 'London':
-            return 'Europe/London'
-          case 'Moscow':
-            return 'Europe/Moscow'
-          case 'Tokyo':
-            return 'Asia/Tokyo'
-          case 'Saint-Petersburg':
-            return 'Europe/Moscow'
-          case 'Paris':
-            return 'Europe/Paris'
-          case 'New-york':
-            return 'America/New_York'
-
-        }
-      }
-
-      function getTimeInCity(timeZone) {
-        const options = {
-          timeZone,
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-        };
-
-        return new Intl.DateTimeFormat('ru-RU', options).format(new Date());
-      }
-
-      const currentCityTime = getTimeInCity(getTimeZone(`${city}`))
-
-      const hourNow = Number(currentCityTime.slice(0, 2));
-      const minNow = Number(currentCityTime.slice(3, 5))
-      const ForecastDays = data.forecast.forecastday;
-      const todayTempByHours = ForecastDays[0].hour;
-      const tomorrowTempByHours = ForecastDays[1].hour;
-
-      const timeNeed = hourNow + 3
-
-      const maxWeather = () => ForecastDays.map(day => day.day.maxtemp_c);
-      const minWeather = () => ForecastDays.map(day => day.day.mintemp_c);
-
-      const weatherEveryThreeHours = () => {
-        const everyThree = [];
-        const everyHours = [...todayTempByHours, ...tomorrowTempByHours]
+const domElements = {
+  maxTemp: document.getElementById('max-temp'),
+  minTemp: document.getElementById('min-temp'),
+  humidity: document.getElementById('humadity'),
+  cloudy: document.getElementById('cloudy'),
+  wind: document.getElementById('wind'),
+  condition: document.querySelector('.today-weather__details-state'),
+  currentTemp: document.querySelector('.fixed-data__temp'),
+  cityName: document.querySelector('.fixed-data__info-city'),
+  currentTime: document.querySelector('.fixed-data__info-time'),
+  bgImage: document.querySelector('.body__bg'),
+  fixDataImage: document.querySelector('.fixed-data__img'),
+  forecastTemp: document.querySelectorAll('.today-weather__forecast-temp'),
+  forecastCondition: document.querySelectorAll('.today-weather__forecast-what'),
+  forecastTime: document.querySelectorAll('.today-weather__forecast-time'),
+  forecastImages: document.querySelectorAll('.today-weather__forecast-img')
+};
 
 
-        for (let i = timeNeed; i < 48; i += 3) {
-          everyThree.push(everyHours[i].temp_c)
-          if (everyThree.length === 8) {
-            return everyThree
-          }
-        }
-        return everyThree
-      };
-      const weatherEveryThreeHoursCondition = () => {
-        const everyThreeCondition = [];
-        const everyHours = [...todayTempByHours, ...tomorrowTempByHours]
-
-        for (let i = timeNeed; i < 48; i += 3) {
-          everyThreeCondition.push(everyHours[i].condition.text)
-          if (everyThreeCondition.length === 8) {
-            return everyThreeCondition
-          }
-        }
-        return everyThreeCondition
-      };
-
-      function weatherForecastTime() {
-        const res = []
-
-        for (let i = timeNeed; i < 48; i += 3) {
-          res.push(i)
-          if (res.length === 8) {
-            return res.map(el => el > 24 ? el - 24 : el)
-          }
-        }
-      }
+const weatherIcons = {
+  cloudy: brokenCloudyIcon,
+  mist: fogIcon,
+  fog: fogIcon,
+  rain: rainSunIcon,
+  drizzle: rainSunIcon,
+  heavy: showerRainIcon,
+  snow: snowIcon,
+  sunny: sunnyIcon,
+  clear: sunnyIcon,
+  thunder: thunderIcon
+};
 
 
-      return {
-        weekMax: maxWeather(),
-        weekMin: minWeather(),
-        everyThreeHours: weatherEveryThreeHours(),
-        everyThreeHoursCondition: weatherEveryThreeHoursCondition(),
-        weatherForecastTime: weatherForecastTime(),
-        minNow: minNow,
-        currentCityTime: currentCityTime,
-        getTimeZone: getTimeZone(city),
-        hourNow: hourNow,
-      };
+const weatherBackgrounds = {
+  clear: clearBg,
+  cloudNight: cloudNightBg,
+  cloudy: cloudBg,
+  mist: mistBg,
+  night: nightBg,
+  rain: rainBg,
+  snow: snowBg,
+  thunder: thunderBg
+};
+
+
+const isNight = (hour) => hour >= 21 || hour <= 4;
+
+const formatTime = (hour, minute) => {
+  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+};
+
+const getWeatherIcon = (condition) => {
+  const cond = condition.toLowerCase();
+
+  if (cond.includes('cloudy') || cond.includes('overcast')) return weatherIcons.cloudy;
+  if (cond.includes('mist') || cond.includes('fog')) return weatherIcons.mist;
+  if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder')) return weatherIcons.rain;
+  if (cond.includes('heavy') && !cond.includes('snow')) return weatherIcons.heavy;
+  if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice')) return weatherIcons.snow;
+  if (cond.includes('thunder')) return weatherIcons.thunder;
+  if (cond.includes('sunny') || cond.includes('clear')) return weatherIcons.clear;
+
+  return sunnyIcon;
+};
+
+const getWeatherBackground = (condition, isNight) => {
+  const cond = condition.toLowerCase();
+
+  if (isNight && cond.includes('clear')) return weatherBackgrounds.night;
+  if (isNight && (cond.includes('cloudy') || cond.includes('overcast'))) return weatherBackgrounds.cloudNight;
+  if (cond.includes('sunny') || cond.includes('clear')) return weatherBackgrounds.clear;
+  if (cond.includes('mist') || cond.includes('fog')) return weatherBackgrounds.mist;
+  if (cond.includes('cloudy') || cond.includes('overcast')) return weatherBackgrounds.cloudy;
+  if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder')) return weatherBackgrounds.rain;
+  if (cond.includes('thunder')) return weatherBackgrounds.thunder;
+  if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice')) return weatherBackgrounds.snow;
+
+  return clearBg;
+};
+
+
+async function fetchWeatherData(city) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=2&aqi=no`
+    );
+
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+    const data = await response.json();
+    const current = data.current;
+    const forecast = data.forecast.forecastday[0];
+    const location = data.location;
+
+
+    const hourlyForecast = getHourlyForecast(data.forecast.forecastday, location.localtime);
+
+    return {
+      current: {
+        temp: `${current.temp_c}°`,
+        humidity: `${current.humidity}%`,
+        cloud: `${current.cloud}%`,
+        wind: `${current.wind_kph} km/h`,
+        condition: current.condition.text
+      },
+      today: {
+        maxTemp: forecast.day.maxtemp_c,
+        minTemp: forecast.day.mintemp_c
+      },
+      location: {
+        name: location.name,
+        timezone: location.tz_id,
+        localtime: location.localtime
+      },
+      hourlyForecast
+    };
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+    throw error;
+  }
+}
+
+function getHourlyForecast(forecastDays, localtime) {
+  const now = new Date(localtime);
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  const hourlyData = [];
+
+
+  const allHours = [
+    ...forecastDays[0].hour,
+    ...(forecastDays[1] ? forecastDays[1].hour : [])
+  ];
+
+
+  const currentHourIndex = allHours.findIndex(hour => {
+    const hourTime = new Date(hour.time);
+    return hourTime.getHours() === currentHour;
+  });
+
+  for (let i = 0; i < 8; i++) {
+    const index = currentHourIndex + 3 * (i + 1);
+    if (index >= allHours.length) break;
+
+    const hourData = allHours[index];
+    const time = new Date(hourData.time);
+
+    hourlyData.push({
+      time: formatTime(time.getHours(), currentMinute),
+      temp: hourData.temp_c,
+      condition: hourData.condition.text
     });
+  }
 
-  const currentPromise = fetch(`https://api.weatherapi.com/v1/current.json?key=43e478e4b6fc474ab08164231252508&q=${city}&aqi=no`)
-    .then(response => {
-      if (!response.ok) throw new Error(`HTTP ошибка! Код: ${response.status}`);
-      return response.json();
-    })
-    .then(data => ({
-
-      current: `${data.current.temp_c}°`,
-      humidityPercent: `${data.current.humidity}%`,
-      cloudPercent: `${data.current.cloud}%`,
-      windSpeed: `${data.current.wind_kph} km/h`,
-      condition: data.current.condition.text,
-
-    }));
-
-  return Promise.all([forecastPromise, currentPromise])
-    .then(([forecastData, currentData]) => ({
-      ...forecastData,
-      ...currentData,
-    }))
-    .catch(error => {
-      console.error('Ошибка при выполнении запроса:', error);
-      throw error;
-    });
+  return hourlyData;
 }
 
 async function displayWeather(city) {
   try {
     const weatherData = await fetchWeatherData(city);
 
-    document.getElementById('max-temp').innerHTML = weatherData.weekMax[0];
-    document.getElementById('min-temp').innerHTML = weatherData.weekMin[0];
-    document.getElementById('humadity').innerHTML = weatherData.humidityPercent;
-    document.getElementById('cloudy').innerHTML = weatherData.cloudPercent;
-    document.getElementById('wind').innerHTML = weatherData.windSpeed;
-    document.querySelector('.today-weather__details-state').innerHTML = weatherData.condition
-    document.querySelector('.fixed-data__temp').innerHTML = weatherData.current
+
+    domElements.maxTemp.textContent = weatherData.today.maxTemp;
+    domElements.minTemp.textContent = weatherData.today.minTemp;
+    domElements.humidity.textContent = weatherData.current.humidity;
+    domElements.cloudy.textContent = weatherData.current.cloud;
+    domElements.wind.textContent = weatherData.current.wind;
+    domElements.condition.textContent = weatherData.current.condition;
+    domElements.currentTemp.textContent = weatherData.current.temp;
+    domElements.cityName.textContent = weatherData.location.name;
 
 
-    const hourNow = weatherData.hourNow;
-    const forecastElements = document.querySelectorAll('.today-weather__forecast-temp')
-    const forecastElementCondition = document.querySelectorAll('.today-weather__forecast-what')
-    const forecastElementTime = document.querySelectorAll('.today-weather__forecast-time')
-    const currentTimeAndDate = document.querySelector('.fixed-data__info-time')
-    const weatherForecastImagesElements = document.querySelectorAll('.today-weather__forecast-img')
-    const weatherForecast = weatherData.everyThreeHours
-    const weatherForecastCondition = weatherData.everyThreeHoursCondition
-    const weatherForecastTime = weatherData.weatherForecastTime.map((el) => {
-      if (el >= 1 && el <= 9) {
-        return `0${el}:${weatherData.minNow}`
-      } else {
-        return `${el}:${weatherData.minNow}`
-      }
-    })
-    const condition = weatherData.condition;
-    const bgImage = document.querySelector('.body__bg')
-    const fixDataImage = document.querySelector('.fixed-data__img')
-    const night = hourNow >= 21 || hourNow <= 4
+    updateCurrentTime(weatherData.location.localtime);
 
 
-    function fixedImageChange() {
-      const cond = condition.toLowerCase()
-      if (cond.includes('cloudy') || cond.includes('overcast')) {
-        fixDataImage.src = brokenCloudyIcon
-      } else if (cond.includes("mist") || cond.includes('fog')) {
-        fixDataImage.src = fogIcon
-      } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder') && !cond.includes('heavy')) {
-        fixDataImage.src = rainSunIcon
-      } else if (cond.includes('heavy') && !cond.includes('snow')) {
-        fixDataImage.src = showerRainIcon
-      } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-        fixDataImage.src = snowIcon
-      } else if (cond.includes('sunny') || cond.includes('clear')) {
-        fixDataImage.src = sunnyIcon
-      } else if (cond.includes('thunder')) {
-        fixDataImage.src = thunderIcon
-      }
-    }
-
-    function forecastElementsToggggl() {
-      forecastElements.forEach((element, index) => {
-        if (weatherForecast[index]) {
-          element.innerHTML = weatherForecast[index]
-        }
-      })
-      forecastElementCondition.forEach((element, index) => {
-        if (weatherForecastCondition[index]) {
-          element.innerHTML = weatherForecastCondition[index]
-        }
-      })
-      forecastElementTime.forEach((element, index) => {
-        if (weatherForecastTime[index]) {
-          element.innerHTML = weatherForecastTime[index]
-        }
-      })
-      weatherForecastImagesElements.forEach((element, index) => {
-        const cond = weatherForecastCondition[index].toLowerCase()
-        if (cond.includes('cloudy') || cond.includes('overcast')) {
-          element.src = brokenCloudyIcon
-        } else if (cond.includes("mist") || cond.includes('fog')) {
-          element.src = fogIcon
-        } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder') && !cond.includes('heavy')) {
-          element.src = rainSunIcon
-        } else if (cond.includes('heavy') && !cond.includes('snow')) {
-          element.src = showerRainIcon
-        } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-          element.src = snowIcon
-        } else if (cond.includes('sunny') || cond.includes('clear')) {
-          element.src = sunnyIcon
-        } else if (cond.includes('thunder')) {
-          element.src = thunderIcon
-        }
-      })
-    }
-
-    function changeBg() {
-      const cond = condition.toLowerCase();
-
-      if (night && cond.includes('clear')) {
-        bgImage.style.backgroundImage = `url(${nightBg})`
-      } else if (night && (cond.includes('cloudy') || cond.includes('overcast'))) {
-        bgImage.style.backgroundImage = `url(${cloudNightBg})`
-      } else if (cond.includes('sunny') || cond.includes('clear')) {
-        bgImage.style.backgroundImage = `url(${clearBg})`
-      } else if (cond.includes("mist") || cond.includes('fog')) {
-        bgImage.style.backgroundImage = `url(${mistBg})`
-      } else if (cond.includes('cloudy') || cond.includes('overcast')) {
-        bgImage.style.backgroundImage = `url(${cloudBg})`
-      } else if ((cond.includes('rain') || cond.includes('drizzle')) && !cond.includes('thunder')) {
-        bgImage.style.backgroundImage = `url(${rainBg})`
-      } else if (cond.includes('thunder')) {
-        bgImage.style.backgroundImage = `url(${thunderBg})`
-      } else if (cond.includes('snow') || cond.includes('blizzard') || cond.includes('ice') || cond.includes('sleet')) {
-        bgImage.style.backgroundImage = `url(${snowBg})`
-      }
-    }
-
-    function getTimePartsInCity(timeZone) {
-      const options = {
-        timeZone,
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        weekday: 'long',
-      };
-
-      const formatter = new Intl.DateTimeFormat('en-EN', options);
-      const parts = formatter.formatToParts(new Date());
-
-      const result = {};
-      parts.forEach(part => {
-        if (part.type !== 'literal') {
-          result[part.type] = part.value;
-        }
-      });
-
-      return result;
-    }
-
-    function showCurrentTimeAndDate() {
-      const timeParts = getTimePartsInCity(weatherData.getTimeZone)
-
-      const day = timeParts.day
-      const time = `${timeParts.hour}:${timeParts.minute}`
-      const dayOfWeek = timeParts.weekday
-      const month = timeParts.month
-      const year = timeParts.year.slice(2, 4)
+    const isNightTime = isNight(new Date(weatherData.location.localtime).getHours());
+    domElements.fixDataImage.src = getWeatherIcon(weatherData.current.condition);
+    domElements.bgImage.style.backgroundImage = `url(${getWeatherBackground(weatherData.current.condition, isNightTime)})`;
 
 
-      return currentTimeAndDate.innerHTML = `${time} - ${dayOfWeek}, ${day} ${month} '${year}`
-    }
-
-    fixedImageChange()
-    forecastElementsToggggl()
-    showCurrentTimeAndDate()
-    changeBg()
+    updateHourlyForecast(weatherData.hourlyForecast);
 
   } catch (error) {
-    console.error('Ошибка:', error);
+    console.error('Error displaying weather:', error);
+
   }
 }
 
+function updateCurrentTime(localtime) {
+  const date = new Date(localtime);
+  const options = {
+    weekday: 'long',
+    year: '2-digit',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
 
-document.addEventListener('DOMContentLoaded', function () {
-  const citySelect = document.getElementById('citySelect');
+  domElements.currentTime.textContent = date.toLocaleDateString('en-EN', options);
+}
+
+function updateHourlyForecast(hourlyForecast) {
+  hourlyForecast.forEach((hour, index) => {
+    if (domElements.forecastTemp[index]) {
+      domElements.forecastTemp[index].textContent = hour.temp;
+    }
+
+    if (domElements.forecastCondition[index]) {
+      domElements.forecastCondition[index].textContent = hour.condition;
+    }
+
+    if (domElements.forecastTime[index]) {
+      domElements.forecastTime[index].textContent = hour.time;
+    }
+
+    if (domElements.forecastImages[index]) {
+      domElements.forecastImages[index].src = getWeatherIcon(hour.condition);
+    }
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
   let currentCity = 'Moscow';
 
 
-  displayWeather(currentCity);
-  updateCityName(currentCity);
+  const citySelect = document.getElementById('citySelect');
 
 
-  citySelect.addEventListener('change', function (event) {
-    currentCity = event.target.value;
-    updateCityName(currentCity);
-    displayWeather(currentCity);
+  let timeoutId;
+  citySelect.addEventListener('change', function(event) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      currentCity = event.target.value;
+      displayWeather(currentCity);
+    }, 300);
   });
 
 
-  function updateCityName(city) {
-    document.querySelector('.fixed-data__info-city').textContent = city;
-  }
+  displayWeather(currentCity);
 });
-
-
-

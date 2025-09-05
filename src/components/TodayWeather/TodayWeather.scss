@@ -114,6 +114,7 @@
 
     &-img {
       --size: #{fluid(48, 35)};
+      transition: opacity 0.3s ease;
 
       @include square(var(--size));
     }
